@@ -42,10 +42,10 @@ class TestData(unittest.TestCase):
         from_get_redundancy = titanic.get_redundancy()
         self.assertTrue(np.array_equal(redundancy, from_get_redundancy))
 
-        titanic.solve_feature_selection(k=3, alpha=0.5, solver=solver)
-        mock_select.assert_called_with(num_features=3, alpha=0.5, solver=solver)
+        titanic.solve_feature_selection(k=3, alpha=0.5, time=10, solver=solver)
+        mock_select.assert_called_with(num_features=3, alpha=0.5, time_limit=10, solver=solver)
         mock_get.assert_called_with(
-            mock_select(num_features=3, alpha=0.5).fit_transform(
+            mock_select(num_features=3, alpha=0.5, time=10).fit_transform(
                 titanic.X.values, titanic.y
             )
         )
@@ -81,8 +81,8 @@ class TestData(unittest.TestCase):
         from_get_redundancy = scene.get_redundancy()
         self.assertTrue(np.array_equal(redundancy, from_get_redundancy))
 
-        scene.solve_feature_selection(k=3, alpha=0.5, solver=solver)
-        mock_select.assert_called_with(num_features=3, alpha=0.5, solver=solver)
+        scene.solve_feature_selection(k=3, alpha=0.5, time=10, solver=solver)
+        mock_select.assert_called_with(num_features=3, alpha=0.5, time_limit=10, solver=solver)
         mock_get.assert_called_with(
             mock_select(num_features=3, alpha=0.5).fit_transform(
                 scene.X.values, scene.y
