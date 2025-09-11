@@ -87,8 +87,8 @@ class DataSetBase:
                     break
         return feature_names
 
-    def solve_feature_selection(self, k, alpha, solver):
-        """Construct and solve feature selection CQM using plugin.
+    def solve_feature_selection(self, k, alpha, time, solver):
+        """Construct and solve feature selection using plugin.
 
         Args:
             k (int):
@@ -96,6 +96,8 @@ class DataSetBase:
             alpha (float):
                 Parameter between 0 and 1 that defines the relative weight of
                 linear and quadratic coefficients.
+            time (int):
+                Number of seconds for solver to run.
             solver (str):
                 String dictating use of either CQM or NL.
 
@@ -103,7 +105,7 @@ class DataSetBase:
             Array of indices of selected features.
         """
 
-        X_new = SelectFromQuadraticModel(num_features=k, alpha=alpha, solver=solver).fit_transform(self.X.values, self.y)
+        X_new = SelectFromQuadraticModel(num_features=k, alpha=alpha, time_limit=time, solver=solver).fit_transform(self.X.values, self.y)
         return self.get_selected_features(X_new)
 
     def score_indices_cv(self, indices, cv=3):
@@ -149,6 +151,7 @@ class Titanic(DataSetBase):
         self.default_k = 8
 
         self.n = np.size(self.X, 1)
+        self.name = 'titanic'
 
 
 class Scene(DataSetBase):
@@ -168,6 +171,7 @@ class Scene(DataSetBase):
         self.default_redundancy_penalty = 0.4
 
         self.n = np.size(self.X, 1)
+        self.name = 'scene'
 
 def DataSet(name):
     """Return instance of specified DataSet class.
