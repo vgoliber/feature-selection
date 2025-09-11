@@ -7,6 +7,9 @@
 This demo showcases feature selection using a nonlinear (NL) model
 or a constrained quadratic model (CQM) via
 [D-Wave's scikit-learn plug-in](https://github.com/dwavesystems/dwave-scikit-learn-plugin).
+
+![Demo Example](static/demo.png)
+
 The demo can be used with two different datasets:
 
 - `titanic`: This is a well-known dataset based on passenger survival from the
