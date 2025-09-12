@@ -78,9 +78,9 @@ def create_features_input(data_set: str) -> tuple[int, int, dict]:
     data = DataSet(data_set)
     max_feat = data.n
 
-    value = round(max_feat/2)
+    value = round(max_feat / 2)
 
-    marks={
+    marks = {
         1: "1",
         max_feat: str(max_feat),
     }
@@ -89,12 +89,12 @@ def create_features_input(data_set: str) -> tuple[int, int, dict]:
 
 
 @dash.callback(
-        Output("input-graph", "figure"),
-        inputs=[
-            Input("input-graph", "hoverData"),
-            Input("dataset", "value"),
-            Input("input-redund", "value")
-        ],
+    Output("input-graph", "figure"),
+    inputs=[
+        Input("input-graph", "hoverData"),
+        Input("dataset", "value"),
+        Input("input-redund", "value"),
+    ],
 )
 def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figure:
     """Runs on load and any time the data set is updated. Displays the features in the data, with a bar showing the relevance of each feature. If show_red is true, then hovering on each feature's column shows the correlation between that feature and every other feature.
@@ -110,7 +110,7 @@ def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figu
 
     if ctx.triggered_id == "input-graph" and not show_red:
         raise PreventUpdate
-    
+
     # Load the data set
     data = DataSet(data_set)
 
@@ -118,16 +118,18 @@ def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figu
 
 
 @dash.callback(
-        Output("output-graph", "figure"),
-        inputs=[
-            Input("output-graph", "hoverData"),
-            Input("results-redund", "value"),
-            Input("selected-features", "data"),
-            Input("soln-score", "data"),
-            State("dataset", "value"),
-        ],
+    Output("output-graph", "figure"),
+    inputs=[
+        Input("output-graph", "hoverData"),
+        Input("results-redund", "value"),
+        Input("selected-features", "data"),
+        Input("soln-score", "data"),
+        State("dataset", "value"),
+    ],
 )
-def draw_output_graph(hover_data: dict, show_red: bool, selected_features: list, soln_score: float, data_set: str) -> go.Figure:
+def draw_output_graph(
+    hover_data: dict, show_red: bool, selected_features: list, soln_score: float, data_set: str
+) -> go.Figure:
     """Runs when the optimization step is complete. Displays the same bar graph as on the "Input" tab, with selected features solid/heavily outlined and unselected features semi-transparent.
 
     Args:
@@ -140,30 +142,36 @@ def draw_output_graph(hover_data: dict, show_red: bool, selected_features: list,
     Returns:
         go.Figure: A Plotly figure object.
     """
-    
+
     # Load the data set
     data = DataSet(data_set)
 
-    fig = make_subplots(rows=1, cols=2, column_widths=[0.80,0.20], shared_yaxes=True, subplot_titles=("Selected Features","Accuracy"))
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        column_widths=[0.80, 0.20],
+        shared_yaxes=True,
+        subplot_titles=("Selected Features", "Accuracy"),
+    )
 
     fig1 = draw_bar_chart(hover_data, selected_features, data, show_red)
     fig2 = draw_accuracy_bars(data, selected_features, soln_score)
 
-    fig.add_trace(fig1['data'][0], row=1, col=1)
-    fig.add_trace(fig2['data'][0], row=1, col=2)
-    
+    fig.add_trace(fig1["data"][0], row=1, col=1)
+    fig.add_trace(fig2["data"][0], row=1, col=2)
+
     fig.update_xaxes(title_text="Num Features", row=1, col=2)
 
     # Modify bar chart axis labels:
     fig.update_yaxes(title_text="Feature Relevance to Outcome", row=1, col=1)
-    if data.name == 'titanic':
+    if data.name == "titanic":
         fig.update_xaxes(title_text="Passenger Features", row=1, col=1)
-    elif data.name == 'scene':
+    elif data.name == "scene":
         fig.update_xaxes(title_text="Color and Texture Features in Image", row=1, col=1)
 
     fig.update_layout(
         showlegend=False,
-        yaxis_range=[0,1.1],
+        yaxis_range=[0, 1.1],
         margin={"t": 0, "l": 0, "b": 0, "r": 0},
     )
 
@@ -239,17 +247,17 @@ def run_optimization(
             problem-details: List of the table rows for the problem details table.
     """
 
-    print('solving...')
+    print("solving...")
 
     solver_type = SolverType(solver_type)
     solver = "cqm" if solver_type is SolverType.CQM else "nl"
 
     data = DataSet(data_set)
-    
+
     solution = data.solve_feature_selection(num_features, 1.0 - redund_penalty, time_limit, solver)
-    
-    solution = [int(i) for i in solution] # Avoid issues with json and int64
-    print('solution:', solution)
+
+    solution = [int(i) for i in solution]  # Avoid issues with json and int64
+    print("solution:", solution)
     score = data.score_indices_cv(solution)
 
     # Generates a list of table rows for the problem details table.
@@ -259,7 +267,7 @@ def run_optimization(
     )
 
     return RunOptimizationReturn(
-        score = score,
-        features = solution,
+        score=score,
+        features=solution,
         problem_details_table=problem_details_table,
     )

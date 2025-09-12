@@ -19,7 +19,7 @@
 # THEME_COLOR_SECONDARY can be light or dark and is used for sliders, loading icon, and tabs
 THEME_COLOR = "#074C91"  # D-Wave dark blue default #074C91
 THEME_COLOR_SECONDARY = "#2A7DE1"  # D-Wave blue default #2A7DE1
-COLOR_SCALE = ['#074C91', '#2A7DE1', '#17BEBB', '#FFA143', '#F37820']
+COLOR_SCALE = ["#074C91", "#2A7DE1", "#17BEBB", "#FFA143", "#F37820"]
 
 GRAPH_FONT_SIZE = 14
 
@@ -52,9 +52,9 @@ REDUNDANCY = {
 
 # List of datasets for drop down
 DATA_SETS = [
-        {'label': 'Titanic Survival', 'value': 'titanic'},
-        {'label': 'Scene', 'value': 'scene'}
-    ]
+    {"label": "Titanic Survival", "value": "titanic"},
+    {"label": "Scene", "value": "scene"},
+]
 
 
 SHOW_REDUNDANCY = ["Show Redundancy"]

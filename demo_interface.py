@@ -27,7 +27,7 @@ from demo_configs import (
     SOLVER_TIME,
     THEME_COLOR_SECONDARY,
     THUMBNAIL,
-    DATA_SETS
+    DATA_SETS,
 )
 from src.demo_enums import SolverType
 
@@ -84,7 +84,9 @@ def dropdown(label: str, id: str, options: list) -> html.Div:
     )
 
 
-def checklist(label: str, id: str, options: list, values: list, style: dict = None, inline: bool = True) -> html.Div:
+def checklist(
+    label: str, id: str, options: list, values: list, style: dict = None, inline: bool = True
+) -> html.Div:
     """Checklist element for option selection.
 
     Args:
@@ -310,7 +312,7 @@ def create_interface():
                                                 "input-redund",
                                                 SHOW_REDUNDANCY,
                                                 [],
-                                                style={'margin-left': '30px'},
+                                                style={"margin-left": "30px"},
                                             ),
                                             dcc.Loading(
                                                 parent_className="input",
@@ -321,7 +323,7 @@ def create_interface():
                                                 children=html.Div(
                                                     [
                                                         dcc.Graph(
-                                                            id='input-graph', 
+                                                            id="input-graph",
                                                             responsive=False,
                                                             config={"displayModeBar": False},
                                                         )
@@ -351,13 +353,17 @@ def create_interface():
                                                         color=THEME_COLOR_SECONDARY,
                                                         delay_show=50,
                                                         # A Dash callback (in app.py) will generate content in the Div below
-                                                        children=html.Div([
-                                                            dcc.Graph(
-                                                                id='output-graph', 
-                                                                responsive=False,
-                                                                config={"displayModeBar": False},
-                                                            ),
-                                                        ],),
+                                                        children=html.Div(
+                                                            [
+                                                                dcc.Graph(
+                                                                    id="output-graph",
+                                                                    responsive=False,
+                                                                    config={
+                                                                        "displayModeBar": False
+                                                                    },
+                                                                ),
+                                                            ],
+                                                        ),
                                                     ),
                                                     # Problem details dropdown
                                                     html.Div([html.Hr(), problem_details(1)]),
