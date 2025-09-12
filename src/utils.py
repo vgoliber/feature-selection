@@ -16,22 +16,23 @@ import numpy as np
 import pandas as pd
 from plotly.colors import sample_colorscale
 import plotly.graph_objs as go
+from typing import Optional
 
 from data import DataSet
 from demo_configs import COLOR_SCALE, GRAPH_FONT_SIZE
 
 
-def draw_bar_chart(hover_data: dict, selected_features: list, data: DataSet, show_red: bool) -> go.Figure:
+def draw_bar_chart(hover_data: dict, selected_features: Optional[list], data: DataSet, show_redundancy: bool) -> go.Figure:
     """Draws the feature relevance bar charts for input/output.
 
     Args:
         hover_data: Input information about user mouse location.
         selected_features: Solution (if available). If not available then None.
         data: The DataSet object for the given data set.
-        show_red: If we want to see redundancy.
+        show_redundancy: Whether we want to see redundancy.
 
     Returns:
-        go.Figure: A Plotly figure object.
+        go.Figure: A Plotly figure object showing the relevance of each feature.
     
     """
 
@@ -59,7 +60,7 @@ def draw_bar_chart(hover_data: dict, selected_features: list, data: DataSet, sho
 
     # Manually calculate the continuous color map to show redundancy.
     # This is required for different opacity levels per bar.
-    if hover_data and show_red:
+    if hover_data and show_redundancy:
         idx = hover_data['points'][0]['pointIndex']
         redundancy_data = data.get_redundancy()
         # Protect against case where the last hovered point was from a larger data set.
@@ -101,6 +102,7 @@ def draw_bar_chart(hover_data: dict, selected_features: list, data: DataSet, sho
     
     fig.update_layout(
         font=dict(size=GRAPH_FONT_SIZE),
+        margin={"t": 0, "l": 0, "b": 0, "r": 0},
         yaxis_title='Feature Relevance to Outcome',
         yaxis_range=[0,1.1],
     )
@@ -122,7 +124,7 @@ def draw_accuracy_bars(data: DataSet, selected_features: list, soln_score: float
         soln_score: Accuracy score for model using selected_features.
 
     Returns:
-        go.Figure: A Plotly figure object.
+        go.Figure: A Plotly figure object comparing the accuracy of using all features vs only the selected features.
     
     """
 
@@ -145,8 +147,8 @@ def draw_accuracy_bars(data: DataSet, selected_features: list, soln_score: float
 
     fig.update_layout(
         font=dict(size=GRAPH_FONT_SIZE),
+        margin={"t": 0, "l": 0, "b": 0, "r": 0},
         xaxis_title='Num Features',
-        # yaxis_title='Accuracy',
         yaxis_range=[0,1.1],
     )
 

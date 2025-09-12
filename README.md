@@ -67,6 +67,17 @@ python app.py
 ```
 
 Access the user interface with your browser at http://127.0.0.1:8050/.
+
+The demo program opens an interface where you can configure problems and submit these problems to
+a solver.
+
+Configuration options can be found in the [demo_configs.py](demo_configs.py) file.
+
+> [!NOTE]\
+> If you plan on editing any files while the application is running, please run the application
+with the `--debug` command-line argument for live reloads and easier debugging:
+`python app.py --debug`
+
 A dropdown menu is provided to choose the dataset.
 
 To visualize feature redundancy, first activate the "Show redundancy" check box.

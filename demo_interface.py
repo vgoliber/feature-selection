@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 from dash import dcc, html
+from typing import Optional
 
 from demo_configs import (
     DESCRIPTION,
@@ -29,14 +30,6 @@ from demo_configs import (
     DATA_SETS
 )
 from src.demo_enums import SolverType
-
-def display_input_data():
-    """Load data set information an display in input tab.
-    
-    Returns:
-        fig: a bar chart showing feature relevance.
-    """
-    return
 
 
 def slider(label: str, id: str, config: dict) -> html.Div:
@@ -91,7 +84,7 @@ def dropdown(label: str, id: str, options: list) -> html.Div:
     )
 
 
-def checklist(label: str, id: str, options: list, values: list, inline: bool = True) -> html.Div:
+def checklist(label: str, id: str, options: list, values: list, style: dict = None, inline: bool = True) -> html.Div:
     """Checklist element for option selection.
 
     Args:
@@ -99,6 +92,7 @@ def checklist(label: str, id: str, options: list, values: list, inline: bool = T
         id: A unique selector for this element.
         options: A list of dictionaries of labels and values.
         values: A list of values that should be preselected in the checklist.
+        style: An optional list of style properties.
         inline: Whether the options of the checklist are displayed beside or below each other.
     """
     return html.Div(
@@ -111,39 +105,10 @@ def checklist(label: str, id: str, options: list, values: list, inline: bool = T
                 inline=inline,
                 options=options,
                 value=values,
+                style=style,
             ),
         ],
     )
-
-
-# def radio(label: str, id: str, options: list, value: int, inline: bool = True) -> html.Div:
-#     """Radio element for option selection.
-
-#     Args:
-#         label: The title that goes above the radio.
-#         id: A unique selector for this element.
-#         options: A list of dictionaries of labels and values.
-#         value: The value of the radio that should be preselected.
-#         inline: Whether the options are displayed beside or below each other.
-#     """
-#     return html.Div(
-#         className="radio-wrapper",
-#         children=[
-#             html.Label(label),
-#             dcc.RadioItems(
-#                 id=id,
-#                 className=f"radio{' radio--inline' if inline else ''}",
-#                 inline=inline,
-#                 options=options,
-#                 value=value,
-#             ),
-#         ],
-#     )
-
-
-def generate_options(options_list: list) -> list[dict]:
-    """Generates options for dropdowns, checklists, radios, etc."""
-    return [{"label": label, "value": i} for i, label in enumerate(options_list)]
 
 
 def generate_settings_form() -> html.Div:
@@ -174,12 +139,6 @@ def generate_settings_form() -> html.Div:
                 label="Redundancy Penalty",
                 id="redund",
                 config=REDUNDANCY,
-            ),
-            checklist(
-                " ",
-                "show-redund",
-                SHOW_REDUNDANCY,
-                [],
             ),
             dropdown(
                 "Solver",
@@ -346,10 +305,18 @@ def create_interface():
                                         value="input-tab",  # used for switching tabs programatically
                                         className="tab",
                                         children=[
+                                            checklist(
+                                                " ",
+                                                "input-redund",
+                                                SHOW_REDUNDANCY,
+                                                [],
+                                                style={'margin-left': '30px'},
+                                            ),
                                             dcc.Loading(
                                                 parent_className="input",
                                                 type="circle",
                                                 color=THEME_COLOR_SECONDARY,
+                                                delay_show=50,
                                                 # A Dash callback (in app.py) will generate content in the Div below
                                                 children=html.Div(
                                                     [
@@ -372,10 +339,17 @@ def create_interface():
                                             html.Div(
                                                 className="tab-content-results",
                                                 children=[
+                                                    checklist(
+                                                        " ",
+                                                        "results-redund",
+                                                        SHOW_REDUNDANCY,
+                                                        [],
+                                                    ),
                                                     dcc.Loading(
                                                         parent_className="results",
                                                         type="circle",
                                                         color=THEME_COLOR_SECONDARY,
+                                                        delay_show=50,
                                                         # A Dash callback (in app.py) will generate content in the Div below
                                                         children=html.Div([
                                                             dcc.Graph(

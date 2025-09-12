@@ -57,15 +57,15 @@ def toggle_left_column(collapse_trigger: int, to_collapse_class: str) -> str:
 
 
 @dash.callback(
-        Output("features", "max"),
-        Output("features", "value"),
-        Output("features", "marks"),
-        inputs=[
-            Input("dataset", "value"),
-        ],
+    Output("features", "max"),
+    Output("features", "value"),
+    Output("features", "marks"),
+    inputs=[
+        Input("dataset", "value"),
+    ],
 )
-def create_features_input(data_set: str):
-    """Runs on load and any time the data set is updated.
+def create_features_input(data_set: str) -> tuple[int, int, dict]:
+    """Updates the max, marks, and default value of the Number of Features slider on load and any time the data set is updated.
 
     Args:
         data_set: The data set selected.
@@ -93,11 +93,11 @@ def create_features_input(data_set: str):
         inputs=[
             Input("input-graph", "hoverData"),
             Input("dataset", "value"),
-            Input("show-redund", "value")
+            Input("input-redund", "value")
         ],
 )
 def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figure:
-    """Runs on load and any time the data set is updated.
+    """Runs on load and any time the data set is updated. Displays the features in the data, with a bar showing the relevance of each feature. If show_red is true, then hovering on each feature's column shows the correlation between that feature and every other feature.
 
     Args:
         hover_data: Input information about user mouse location.
@@ -107,6 +107,9 @@ def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figu
     Returns:
         go.Figure: A Plotly figure object.
     """
+
+    if ctx.triggered_id == "input-graph" and not show_red:
+        raise PreventUpdate
     
     # Load the data set
     data = DataSet(data_set)
@@ -118,14 +121,14 @@ def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figu
         Output("output-graph", "figure"),
         inputs=[
             Input("output-graph", "hoverData"),
-            Input("show-redund", "value"),
+            Input("results-redund", "value"),
             Input("selected-features", "data"),
             Input("soln-score", "data"),
             State("dataset", "value"),
         ],
 )
 def draw_output_graph(hover_data: dict, show_red: bool, selected_features: list, soln_score: float, data_set: str) -> go.Figure:
-    """Runs when the optimization step is complete.
+    """Runs when the optimization step is complete. Displays the same bar graph as on the "Input" tab, with selected features solid/heavily outlined and unselected features semi-transparent.
 
     Args:
         hover_data: Input information about user mouse location.
@@ -151,32 +154,20 @@ def draw_output_graph(hover_data: dict, show_red: bool, selected_features: list,
     
     fig.update_xaxes(title_text="Num Features", row=1, col=2)
 
+    # Modify bar chart axis labels:
+    fig.update_yaxes(title_text="Feature Relevance to Outcome", row=1, col=1)
+    if data.name == 'titanic':
+        fig.update_xaxes(title_text="Passenger Features", row=1, col=1)
+    elif data.name == 'scene':
+        fig.update_xaxes(title_text="Color and Texture Features in Image", row=1, col=1)
+
     fig.update_layout(
         showlegend=False,
         yaxis_range=[0,1.1],
+        margin={"t": 0, "l": 0, "b": 0, "r": 0},
     )
 
     return fig
-
-
-@dash.callback(
-    Output("input", "children"),
-    inputs=[
-        Input("features", "value"),
-        Input("redund", "value"),
-    ],
-)
-def render_initial_state(num_features: int, redund_penalty: float) -> str:
-    """Runs on load and any time the value of the slider is updated.
-        Add `prevent_initial_call=True` to skip on load runs.
-
-    Args:
-        slider_value: The value of the slider.
-
-    Returns:
-        str: The content of the input tab.
-    """
-    return f"The current slider values are {num_features} (number of features) and {redund_penalty} (redundancy penalty)."
 
 
 class RunOptimizationReturn(NamedTuple):
@@ -230,8 +221,7 @@ def run_optimization(
 
     This is the main function which is called when the ``Run Optimization`` button is clicked.
     This function takes in all form values and runs the optimization, updates the run/cancel
-    buttons, deactivates (and reactivates) the results tab, and updates all relevant HTML
-    components.
+    buttons, deactivates (and reactivates) the results tab, and draws the output graphs on the "Results" tab.
 
     Args:
         run_click: The (total) number of times the run button has been clicked.
@@ -248,12 +238,6 @@ def run_optimization(
             results: The results to display in the results tab.
             problem-details: List of the table rows for the problem details table.
     """
-
-    # Only run optimization code if this function was triggered by a click on `run-button`.
-    # Setting `Input` as exclusively `run-button` and setting `prevent_initial_call=True`
-    # also accomplishes this.
-    if run_click == 0 or ctx.triggered_id != "run-button":
-        raise PreventUpdate
 
     print('solving...')
 

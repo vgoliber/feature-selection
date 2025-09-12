@@ -28,7 +28,7 @@ THUMBNAIL = "static/dwave_logo.svg"
 APP_TITLE = "Feature Selection"
 MAIN_HEADER = "Feature Selection"
 DESCRIPTION = """\
-The goal for this application is to choose features that will help the machine-learning model learn by promoting diversity between features and strong relationships to the target variable.
+The goal for this application is to choose features that will help the machine learning model learn by promoting diversity between features and strong relationships to the target variable.
 """
 
 #######################################
@@ -57,11 +57,8 @@ DATA_SETS = [
     ]
 
 
-# an example checklist
 SHOW_REDUNDANCY = ["Show Redundancy"]
 
-# an example radio list
-# RADIO = ["Option 1", "Option 2"]
 
 # solver time limits in seconds (value means default)
 SOLVER_TIME = {
