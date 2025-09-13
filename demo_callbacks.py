@@ -65,7 +65,8 @@ def toggle_left_column(collapse_trigger: int, to_collapse_class: str) -> str:
     ],
 )
 def create_features_input(data_set: str) -> tuple[int, int, dict]:
-    """Updates the max, marks, and default value of the Number of Features slider on load and any time the data set is updated.
+    """Updates the max, marks, and default value of the Number of Features slider on load and any
+    time the data set is updated.
 
     Args:
         data_set: The data set selected.
@@ -97,7 +98,9 @@ def create_features_input(data_set: str) -> tuple[int, int, dict]:
     ],
 )
 def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figure:
-    """Runs on load and any time the data set is updated. Displays the features in the data, with a bar showing the relevance of each feature. If show_red is true, then hovering on each feature's column shows the correlation between that feature and every other feature.
+    """Runs on load and any time the data set is updated. Displays the features in the data, with
+    a bar showing the relevance of each feature. If show_red is true, then hovering on each
+    feature's column shows the correlation between that feature and every other feature.
 
     Args:
         hover_data: Input information about user mouse location.
@@ -130,7 +133,8 @@ def draw_input_graph(hover_data: dict, data_set: str, show_red: bool) -> go.Figu
 def draw_output_graph(
     hover_data: dict, show_red: bool, selected_features: list, soln_score: float, data_set: str
 ) -> go.Figure:
-    """Runs when the optimization step is complete. Displays the same bar graph as on the "Input" tab, with selected features solid/heavily outlined and unselected features semi-transparent.
+    """Runs when the optimization step is complete. Displays the same bar graph as on the "Input"
+    tab, with selected features solid/heavily outlined and unselected features semi-transparent.
 
     Args:
         hover_data: Input information about user mouse location.
@@ -142,6 +146,9 @@ def draw_output_graph(
     Returns:
         go.Figure: A Plotly figure object.
     """
+
+    if ctx.triggered_id == "output-graph" and not show_red:
+        raise PreventUpdate
 
     # Load the data set
     data = DataSet(data_set)
@@ -172,7 +179,7 @@ def draw_output_graph(
     fig.update_layout(
         showlegend=False,
         yaxis_range=[0, 1.1],
-        margin={"t": 0, "l": 0, "b": 0, "r": 0},
+        margin={"t": 30, "l": 0, "b": 0, "r": 0},
     )
 
     return fig
@@ -229,21 +236,23 @@ def run_optimization(
 
     This is the main function which is called when the ``Run Optimization`` button is clicked.
     This function takes in all form values and runs the optimization, updates the run/cancel
-    buttons, deactivates (and reactivates) the results tab, and draws the output graphs on the "Results" tab.
+    buttons, deactivates (and reactivates) the results tab, and draws the output graphs on the
+    "Results" tab.
 
     Args:
         run_click: The (total) number of times the run button has been clicked.
-        solver_type: The solver to use for the optimization run defined by SolverType in demo_enums.py.
+        solver_type: The solver to use for the optimization run defined by SolverType in 
+            demo_enums.py.
         time_limit: The solver time limit.
         num_features: The number of features to select.
         redund_penalty: The redundancy penalty selected.
         data_set: The name of the dataset used.
 
     Returns:
-        A NamedTuple (RunOptimizationReturn) containing all outputs to be used when updating the HTML
-        template (in ``demo_interface.py``). These are:
-
-            results: The results to display in the results tab.
+        A NamedTuple (RunOptimizationReturn) containing all outputs to be used when updating the
+        HTML template (in ``demo_interface.py``). These are:
+            score: The accuracy score for the model built with the selected features.
+            features: The features selected.
             problem-details: List of the table rows for the problem details table.
     """
 

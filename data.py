@@ -113,7 +113,8 @@ class DataSetBase:
         return self.get_selected_features(X_new)
 
     def score_indices_cv(self, indices, cv=3):
-        """Compute the accuracy score of a random forest classifier trained using the specified features.
+        """Compute the accuracy score of a random forest classifier trained using the specified
+        features.
 
         Args:
             indices (array): Array of feature indices
@@ -129,7 +130,8 @@ class DataSetBase:
         return np.mean(cross_val_score(clf, self.X.iloc[:, indices], self.y, cv=cv))
 
     def score_baseline_cv(self, reps=5):
-        """Compute baseline accuracy score of a random forest classifier trained using all features.
+        """Compute baseline accuracy score of a random forest classifier trained using all
+        features.
 
         Args:
             reps (int): Number of times to repeat cross-validation.

@@ -28,7 +28,8 @@ THUMBNAIL = "static/dwave_logo.svg"
 APP_TITLE = "Feature Selection"
 MAIN_HEADER = "Feature Selection"
 DESCRIPTION = """\
-The goal for this application is to choose features that will help the machine learning model learn by promoting diversity between features and strong relationships to the target variable.
+The goal for this application is to choose features that will help the machine learning model learn
+by promoting diversity between features and strong relationships to the target variable.
 """
 
 #######################################

@@ -135,7 +135,8 @@ def draw_accuracy_bars(data: DataSet, selected_features: list, soln_score: float
         soln_score: Accuracy score for model using selected_features.
 
     Returns:
-        go.Figure: A Plotly figure object comparing the accuracy of using all features vs only the selected features.
+        go.Figure: A Plotly figure object comparing the accuracy of using all features vs only the
+        selected features.
 
     """
 

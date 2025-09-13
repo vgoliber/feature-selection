@@ -58,7 +58,7 @@ Your development environment should be configured to access the
 [Leap&trade; quantum cloud service](https://docs.dwavequantum.com/en/latest/ocean/sapi_access_basic.html).
 You can see information about supported IDEs and authorizing access to your Leap
 account
-[here](https://docs.dwavequantum.com/en/latest/leap_sapi/dev_env.html).
+[here](https://docs.dwavequantum.com/en/latest/ocean/leap_authorization.html).
 
 Run the following terminal command to start the Dash application:
 

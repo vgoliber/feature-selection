@@ -16,7 +16,6 @@
 from __future__ import annotations
 
 from dash import dcc, html
-from typing import Optional
 
 from demo_configs import (
     DESCRIPTION,
@@ -307,29 +306,32 @@ def create_interface():
                                         value="input-tab",  # used for switching tabs programatically
                                         className="tab",
                                         children=[
-                                            checklist(
-                                                " ",
-                                                "input-redund",
-                                                SHOW_REDUNDANCY,
-                                                [],
-                                                style={"margin-left": "30px"},
-                                            ),
-                                            dcc.Loading(
-                                                parent_className="input",
-                                                type="circle",
-                                                color=THEME_COLOR_SECONDARY,
-                                                delay_show=50,
-                                                # A Dash callback (in app.py) will generate content in the Div below
-                                                children=html.Div(
-                                                    [
-                                                        dcc.Graph(
-                                                            id="input-graph",
-                                                            responsive=False,
-                                                            config={"displayModeBar": False},
-                                                        )
-                                                    ],
-                                                ),
-                                            ),
+                                            html.Div(
+                                                className="tab-content-results",
+                                                children=[
+                                                    checklist(
+                                                        " ",
+                                                        "input-redund",
+                                                        SHOW_REDUNDANCY,
+                                                        [],
+                                                    ),
+                                                    dcc.Loading(
+                                                        parent_className="input",
+                                                        type="circle",
+                                                        color=THEME_COLOR_SECONDARY,
+                                                        delay_show=100,
+                                                        children=html.Div(
+                                                            [
+                                                                dcc.Graph(
+                                                                    id="input-graph",
+                                                                    responsive=False,
+                                                                    config={"displayModeBar": False},
+                                                                )
+                                                            ],
+                                                        ),
+                                                    ),
+                                                ]
+                                            )
                                         ],
                                     ),
                                     dcc.Tab(
@@ -351,8 +353,7 @@ def create_interface():
                                                         parent_className="results",
                                                         type="circle",
                                                         color=THEME_COLOR_SECONDARY,
-                                                        delay_show=50,
-                                                        # A Dash callback (in app.py) will generate content in the Div below
+                                                        delay_show=100,
                                                         children=html.Div(
                                                             [
                                                                 dcc.Graph(
